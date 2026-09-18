@@ -1,0 +1,42 @@
+{
+  "packageId": "com.melleeyyy.hasbi",
+  "host": "melleeyyy.github.io",
+  "name": "Hasbi Music Player",
+  "launcherName": "Hasbi",
+  "display": "standalone",
+  "themeColor": "04060b",
+  "navigationColor": "04060b",
+  "navigationColorDark": "04060b",
+  "navigationDividerColor": "04060b",
+  "navigationDividerColorDark": "04060b",
+  "backgroundColor": "04060b",
+  "enableNotifications": false,
+  "startUrl": "/hasbi-android/",
+  "iconUrl": "https://melleeyyy.github.io/hasbi-android/icons/icon-512.png",
+  "maskableIconUrl": "https://melleeyyy.github.io/hasbi-android/icons/maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./hasbi.keystore",
+    "alias": "hasbi"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://melleeyyy.github.io/hasbi-android/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://melleeyyy.github.io/hasbi-android/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "appVersion": "1.0.0"
+}

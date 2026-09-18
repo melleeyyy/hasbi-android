@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.melleeyyy.hasbi",
+    "sha256_cert_fingerprints": ["F2:6C:57:12:7B:E6:84:86:4C:C7:42:EC:DD:C5:E4:5F:9F:45:E4:B8:FB:70:9D:34:9E:F4:4A:62:A6:D2:F5:68"]
+  }
+}]

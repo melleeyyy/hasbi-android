@@ -113,6 +113,10 @@ class MainActivity : Activity() {
         sortMode = prefs.getString("sort", "added") ?: "added"
         view = if (b?.getBoolean("pl", false) == true) "playlists" else "songs"
         buildUi()
+        if (android.os.Build.VERSION.SDK_INT >= 33 &&
+            checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) !=
+            android.content.pm.PackageManager.PERMISSION_GRANTED)
+            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 5)
         Bus.listeners.add(busListener)
         PlayerService.send(this, "INIT")
         h.postDelayed(tick, 500)
@@ -171,7 +175,7 @@ class MainActivity : Activity() {
         brandRow.gravity = Gravity.CENTER_VERTICAL
         val bName = tv("Hasbi", 24f, C.TEXT, true)
         val bLine = View(this)
-        bLine.background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(C.ACCENT, 0x0000E6A8)).apply { cornerRadius = dp(2).toFloat() }
+        bLine.background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(C.ACCENT, 0x005BCE4B)).apply { cornerRadius = dp(2).toFloat() }
         brandRow.addView(bName, LinearLayout.LayoutParams(-2, -2))
         brandRow.addView(bLine, LinearLayout.LayoutParams(dp(42), dp(2)).apply { leftMargin = dp(8); topMargin = dp(8) })
         val bSub = tv("MUSIC PLAYER", 8.5f, C.ACCENT, true)
@@ -192,7 +196,7 @@ class MainActivity : Activity() {
         tabThumb = View(this)
         tabThumb.background = GradientDrawable().apply {
             orientation = GradientDrawable.Orientation.TL_BR
-            colors = intArrayOf(0x6100C8FF.toInt(), 0x4D00E6A8.toInt())
+            colors = intArrayOf(0x613B7BFF.toInt(), 0x4D5BCE4B.toInt())
             cornerRadius = dp(18).toFloat()
         }
         tabsWrap.addView(tabThumb, FrameLayout.LayoutParams(0, dp(34)).apply { marginStart = dp(4); topMargin = dp(4) })
@@ -300,7 +304,7 @@ class MainActivity : Activity() {
             leftMargin = dp(10); rightMargin = dp(10); bottomMargin = dp(10)
         })
         miniBar = View(mini.context)
-        miniBar.background = GradientDrawable().apply { setColor(0xFF00E6A8.toInt()) }
+        miniBar.background = GradientDrawable().apply { setColor(0xFF5BCE4B.toInt()) }
         mini.addView(miniBar, FrameLayout.LayoutParams(0, dp(3), Gravity.TOP or Gravity.START))
         val miniRow = LinearLayout(this)
         miniRow.orientation = LinearLayout.HORIZONTAL
@@ -637,9 +641,9 @@ class MainActivity : Activity() {
         row.layoutParams = lp
         if (cur) {
             val g = GradientDrawable()
-            g.setColor(0x2400C8FF.toInt())
+            g.setColor(0x243B7BFF.toInt())
             g.cornerRadius = dp(16).toFloat()
-            g.setStroke(1, 0x8C00C8FF.toInt())
+            g.setStroke(1, 0x8C3B7BFF.toInt())
             row.background = ripple(g)
         }
         val art = FrameLayout(this)
@@ -677,6 +681,8 @@ class MainActivity : Activity() {
     }
 
     fun renderAll() {
+        content.removeView(songsEmpty)
+        content.removeView(plEmpty)
         val detail = plCtx != null
         backBtn.visibility = if (detail) View.VISIBLE else View.INVISIBLE
         sortBtn.visibility = if (!detail && view == "songs") View.VISIBLE else View.INVISIBLE
@@ -702,13 +708,7 @@ class MainActivity : Activity() {
 
     private fun renderPlaylists() {
         plList.removeAllViews()
-        (content.indexOfChild(plEmpty)).let { if (it >= 0) content.removeView(plEmpty) }
         val pls = db.playlists().filter { searchQ.isEmpty() || it.name.lowercase().contains(searchQ) }
-        if (pls.isEmpty() && searchQ.isEmpty()) {
-            val lp = FrameLayout.LayoutParams(-1, -2)
-            lp.setMargins(dp(16), dp(16), dp(16), 0)
-            content.addView(plEmpty, 1, lp)
-        }
         var row: LinearLayout? = null
         fun ensureRow() {
             if (row == null || row!!.childCount == 2) {
@@ -780,9 +780,9 @@ class MainActivity : Activity() {
         h.orientation = LinearLayout.VERTICAL
         h.setPadding(dp(16), dp(16), dp(16), dp(16))
         val bg = GradientDrawable()
-        bg.setColor(0x2400C8FF.toInt())
+        bg.setColor(0x243B7BFF.toInt())
         bg.cornerRadius = dp(22).toFloat()
-        bg.setStroke(1, 0x4D00C8FF.toInt())
+        bg.setStroke(1, 0x4D3B7BFF.toInt())
         h.background = bg
         val top = LinearLayout(this)
         top.orientation = LinearLayout.HORIZONTAL

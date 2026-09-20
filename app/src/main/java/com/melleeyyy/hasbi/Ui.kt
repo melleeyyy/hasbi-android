@@ -20,8 +20,8 @@ object C {
     const val PANEL = 0xFF0D1322.toInt()
     const val TEXT = 0xFFFFFFFF.toInt()
     const val MUTED = 0xFF8B95AD.toInt()
-    const val ACCENT = 0xFF00C8FF.toInt()
-    const val ACCENT2 = 0xFF00E6A8.toInt()
+    const val ACCENT = 0xFF3B7BFF.toInt()
+    const val ACCENT2 = 0xFF5BCE4B.toInt()
     const val SURFACE = 0x0DFFFFFF
     const val SURFACE2 = 0x1AFFFFFF
     const val BORDER = 0x17FFFFFF

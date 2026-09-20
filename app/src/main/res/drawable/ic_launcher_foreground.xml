@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/aey_logo"
-    android:inset="8%"/>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="1254" android:viewportHeight="1254">
+    <path android:fillColor="#FFFFFF" android:pathData="M365,303 L468,303 L186,942 L81,942 Z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M365,303 L468,303 L749,942 L644,942 Z"/>
+    <path android:fillColor="#3979F6" android:pathData="M636,303 L1141,303 L1141,397 L677,397 Z"/>
+    <path android:fillColor="#5CC53C" android:pathData="M752,575 L1141,575 L1141,670 L793,670 Z"/>
+    <path android:fillColor="#5CC53C" android:pathData="M867,847 L1141,847 L1141,942 L908,942 Z"/>
+</vector>

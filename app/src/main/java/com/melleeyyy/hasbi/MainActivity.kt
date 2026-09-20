@@ -175,7 +175,7 @@ class MainActivity : Activity() {
         brandRow.gravity = Gravity.CENTER_VERTICAL
         val bName = tv("Hasbi", 24f, C.TEXT, true)
         val bLine = View(this)
-        bLine.background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(C.ACCENT, 0x005BCE4B)).apply { cornerRadius = dp(2).toFloat() }
+        bLine.background = GradientDrawable().apply { setColor(C.ACCENT2); cornerRadius = dp(2).toFloat() }
         brandRow.addView(bName, LinearLayout.LayoutParams(-2, -2))
         brandRow.addView(bLine, LinearLayout.LayoutParams(dp(42), dp(2)).apply { leftMargin = dp(8); topMargin = dp(8) })
         val bSub = tv("MUSIC PLAYER", 8.5f, C.ACCENT, true)
@@ -195,9 +195,8 @@ class MainActivity : Activity() {
         mainCol.addView(tabsWrap, tl)
         tabThumb = View(this)
         tabThumb.background = GradientDrawable().apply {
-            orientation = GradientDrawable.Orientation.TL_BR
-            colors = intArrayOf(0x613B7BFF.toInt(), 0x4D5BCE4B.toInt())
-            cornerRadius = dp(18).toFloat()
+            setColor(0x420229FF.toInt())
+            cornerRadius = dp(17).toFloat()
         }
         tabsWrap.addView(tabThumb, FrameLayout.LayoutParams(0, dp(34)).apply { marginStart = dp(4); topMargin = dp(4) })
         tabThumb.post { tabThumb.layoutParams.width = (tabsWrap.width - dp(8)) / 2; tabThumb.requestLayout() }
@@ -217,7 +216,7 @@ class MainActivity : Activity() {
         searchWrap.orientation = LinearLayout.HORIZONTAL
         searchWrap.gravity = Gravity.CENTER_VERTICAL
         searchWrap.background = surfaceBg(dp(14).toFloat())
-        searchWrap.setPadding(dp(14), 0, dp(4), 0)
+        searchWrap.setPadding(dp(16), 0, dp(4), 0)
         val sl = LinearLayout.LayoutParams(-1, -2)
         sl.setMargins(dp(16), dp(10), dp(16), dp(6))
         mainCol.addView(searchWrap, sl)
@@ -286,25 +285,25 @@ class MainActivity : Activity() {
 
         // FAB
         fab = FrameLayout(this)
-        fab.background = ripple(gradBg(dp(28).toFloat()))
+        fab.background = ripple(gradBg2(dp(28).toFloat()))
         val fi = icon(R.drawable.ic_add, 26, C.TEXT, 10)
         fab.addView(fi, FrameLayout.LayoutParams(-1, -1))
         fab.setOnClickListener { pickFiles() }
         root.addView(fab, FrameLayout.LayoutParams(dp(56), dp(56), Gravity.BOTTOM or Gravity.END).apply {
-            rightMargin = dp(18); bottomMargin = dp(96)
+            rightMargin = dp(18); bottomMargin = dp(104)
         })
 
         // mini player
         mini = FrameLayout(this)
         mini.visibility = View.GONE
-        mini.background = GradientDrawable().apply { setColor(0xE60D1322.toInt()); cornerRadius = dp(18).toFloat() }
+        mini.background = GradientDrawable().apply { setColor(0xE6111116.toInt()); cornerRadius = dp(18).toFloat() }
         mini.clipToOutline = true
-        mini.setPadding(dp(8), dp(8), dp(4), dp(8))
+        mini.setPadding(dp(10), dp(8), dp(4), dp(8))
         root.addView(mini, FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM).apply {
             leftMargin = dp(10); rightMargin = dp(10); bottomMargin = dp(10)
         })
         miniBar = View(mini.context)
-        miniBar.background = GradientDrawable().apply { setColor(0xFF5BCE4B.toInt()) }
+        miniBar.background = GradientDrawable().apply { setColor(C.ACCENT2) }
         mini.addView(miniBar, FrameLayout.LayoutParams(0, dp(3), Gravity.TOP or Gravity.START))
         val miniRow = LinearLayout(this)
         miniRow.orientation = LinearLayout.HORIZONTAL
@@ -415,7 +414,7 @@ class MainActivity : Activity() {
         col.addView(header, LinearLayout.LayoutParams(-1, -2))
 
         val spacer = View(this)
-        col.addView(spacer, LinearLayout.LayoutParams(1, 0, 1f))
+        col.addView(spacer, LinearLayout.LayoutParams(0, 0, 1f))
 
         val discWrap = FrameLayout(this)
         val size = (resources.displayMetrics.widthPixels * 0.54f).toInt()
@@ -473,6 +472,11 @@ class MainActivity : Activity() {
         seekRow.addView(curTime, LinearLayout.LayoutParams(dp(42), -2))
         seek = SeekBar(this)
         seek.max = 1000
+        val seekThumb = GradientDrawable()
+        seekThumb.shape = GradientDrawable.OVAL
+        seekThumb.setColor(-1)
+        seekThumb.setSize(dp(12), dp(12))
+        seek.thumb = seekThumb
         seek.progressTintList = android.content.res.ColorStateList.valueOf(C.ACCENT2)
         seek.thumbTintList = android.content.res.ColorStateList.valueOf(-1)
         seek.progressBackgroundTintList = android.content.res.ColorStateList.valueOf(0x24FFFFFF)
@@ -516,6 +520,9 @@ class MainActivity : Activity() {
         ctl.addView(playBtn, LinearLayout.LayoutParams(dp(74), dp(74)).apply { leftMargin = dp(10); rightMargin = dp(10) })
         ctl.addView(nextBtn, LinearLayout.LayoutParams(dp(50), dp(52)))
         ctl.addView(circleClick(repeatBtn), LinearLayout.LayoutParams(dp(46), dp(52)))
+
+        val spacer2 = View(this)
+        col.addView(spacer2, LinearLayout.LayoutParams(0, 0, 0.75f))
 
         val npGesture = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onFling(e1: MotionEvent?, e2: MotionEvent, vx: Float, vy: Float): Boolean {
@@ -627,6 +634,8 @@ class MainActivity : Activity() {
         return box
     }
 
+    fun pretty(n: String): String = n.replace('_', ' ').replace(Regex("\\s+"), " ").trim()
+
     fun makeRow(t: Track, inPlaylist: Boolean): View {
         val s = PlayerService.cur()
         val cur = s?.currentUid == t.uid
@@ -634,16 +643,16 @@ class MainActivity : Activity() {
         val row = LinearLayout(this)
         row.orientation = LinearLayout.HORIZONTAL
         row.gravity = Gravity.CENTER_VERTICAL
-        row.setPadding(dp(10), dp(6), dp(6), dp(6))
+        row.setPadding(dp(12), dp(8), dp(4), dp(8))
         row.background = ripple(surfaceBg(dp(16).toFloat(), cur))
         val lp = LinearLayout.LayoutParams(-1, -2)
         lp.bottomMargin = dp(6)
         row.layoutParams = lp
         if (cur) {
             val g = GradientDrawable()
-            g.setColor(0x243B7BFF.toInt())
+            g.setColor(0x240229FF.toInt())
             g.cornerRadius = dp(16).toFloat()
-            g.setStroke(1, 0x8C3B7BFF.toInt())
+            g.setStroke(1, 0x8C0229FF.toInt())
             row.background = ripple(g)
         }
         val art = FrameLayout(this)
@@ -657,7 +666,7 @@ class MainActivity : Activity() {
 
         val meta = LinearLayout(this)
         meta.orientation = LinearLayout.VERTICAL
-        val name = tv(t.name, 15f, if (cur) C.ACCENT2 else C.TEXT, true)
+        val name = tv(pretty(t.name), 15f, if (cur) C.ACCENT2 else C.TEXT, true)
         name.maxLines = 1
         name.ellipsize = TextUtils.TruncateAt.END
         val sub = tv(if (t.dur != null && t.dur > 0) fmt(t.dur) else "Local file", 12f, C.MUTED)
@@ -728,7 +737,7 @@ class MainActivity : Activity() {
             card.background = ripple(bg)
             card.setPadding(dp(12), dp(12), dp(12), dp(12))
             val art = FrameLayout(this)
-            if (!dashed) art.background = gradBg(dp(13).toFloat())
+            if (!dashed) art.background = if (heart) gradBg2(dp(13).toFloat()) else gradBg(dp(13).toFloat())
             val iv = icon(if (heart) R.drawable.ic_heart else if (name == "New Playlist") R.drawable.ic_add else R.drawable.ic_playlist, 30, if (dashed) C.MUTED else -1, 10)
             art.addView(iv, FrameLayout.LayoutParams(-1, -1))
             card.addView(art, LinearLayout.LayoutParams(-1, dp(120)))
@@ -780,15 +789,14 @@ class MainActivity : Activity() {
         h.orientation = LinearLayout.VERTICAL
         h.setPadding(dp(16), dp(16), dp(16), dp(16))
         val bg = GradientDrawable()
-        bg.setColor(0x243B7BFF.toInt())
+        bg.setColor(0x240229FF.toInt())
         bg.cornerRadius = dp(22).toFloat()
-        bg.setStroke(1, 0x4D3B7BFF.toInt())
+        bg.setStroke(1, 0x4D0229FF.toInt())
         h.background = bg
         val top = LinearLayout(this)
         top.orientation = LinearLayout.HORIZONTAL
         val art = FrameLayout(this)
-        art.background = if (liked) GradientDrawable(GradientDrawable.Orientation.TL_BR,
-            intArrayOf(C.ACCENT2, C.ACCENT)).apply { cornerRadius = dp(18).toFloat() } else gradBg(dp(18).toFloat())
+        art.background = if (liked) gradBg2(dp(18).toFloat()) else gradBg(dp(18).toFloat())
         val iv = icon(iconRes, 40, -1, 14)
         art.addView(iv, FrameLayout.LayoutParams(-1, -1))
         top.addView(art, LinearLayout.LayoutParams(dp(84), dp(84)))
@@ -894,7 +902,7 @@ class MainActivity : Activity() {
         val t = db.track(uid) ?: return
         val liked = db.isLiked(uid)
         showSheet {
-            sheetTitle(t.name)
+            sheetTitle(pretty(t.name))
             sheetItem("Play", R.drawable.ic_play) { playContext(uid) }
             sheetItem(if (liked) "Remove from Liked songs" else "Add to Liked songs",
                 if (liked) R.drawable.ic_heart else R.drawable.ic_heart_o) {
@@ -1000,7 +1008,7 @@ class MainActivity : Activity() {
                 row.background = ripple(surfaceBg(dp(13).toFloat(), false))
                 val iv = icon(R.drawable.ic_music, 20, C.MUTED, 1)
                 row.addView(iv, LinearLayout.LayoutParams(dp(20), dp(20)))
-                val n = tv(t.name, 15f, C.TEXT)
+                val n = tv(pretty(t.name), 15f, C.TEXT)
                 n.maxLines = 1; n.ellipsize = TextUtils.TruncateAt.END
                 row.addView(n, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(14) })
                 if (t.dur != null && t.dur > 0) {
@@ -1036,7 +1044,7 @@ class MainActivity : Activity() {
                 val idx = tv(if (cur) "▶" else "${i + 1}", 13f, if (cur) C.ACCENT2 else C.MUTED)
                 idx.gravity = Gravity.CENTER
                 row.addView(idx, LinearLayout.LayoutParams(dp(26), -2))
-                val n = tv(t.name, 15f, if (cur) C.ACCENT2 else C.TEXT)
+                val n = tv(pretty(t.name), 15f, if (cur) C.ACCENT2 else C.TEXT)
                 n.maxLines = 1; n.ellipsize = TextUtils.TruncateAt.END
                 row.addView(n, LinearLayout.LayoutParams(0, -2, 1f))
                 if (t.dur != null && t.dur > 0) {
@@ -1162,8 +1170,8 @@ class MainActivity : Activity() {
         if (cur >= 0) {
             val t = db.track(cur)
             mini.visibility = View.VISIBLE
-            npTitle.text = t?.name ?: "—"
-            miniName.text = t?.name ?: "—"
+            npTitle.text = pretty(t?.name ?: "—")
+            miniName.text = pretty(t?.name ?: "—")
             npLabel.text = s?.queueLabel ?: "All songs"
             miniSub.text = s?.queueLabel ?: "Hasbi"
             npSub.text = if (t?.dur != null && t.dur > 0) "Local file · ${fmt(t.dur)}" else "Local file"

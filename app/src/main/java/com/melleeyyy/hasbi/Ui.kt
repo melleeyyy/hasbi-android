@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import android.graphics.SweepGradient
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.view.View
@@ -15,13 +14,13 @@ import kotlin.math.min
 import kotlin.math.sin
 
 object C {
-    const val BG = 0xFF04060B.toInt()
-    const val BG2 = 0xFF070B14.toInt()
-    const val PANEL = 0xFF0D1322.toInt()
+    const val BG = 0xFF000000.toInt()
+    const val BG2 = 0xFF030305.toInt()
+    const val PANEL = 0xFF111116.toInt()
     const val TEXT = 0xFFFFFFFF.toInt()
     const val MUTED = 0xFF8B95AD.toInt()
-    const val ACCENT = 0xFF3B7BFF.toInt()
-    const val ACCENT2 = 0xFF5BCE4B.toInt()
+    const val ACCENT = 0xFF0229FF.toInt()
+    const val ACCENT2 = 0xFF40FF02.toInt()
     const val SURFACE = 0x0DFFFFFF
     const val SURFACE2 = 0x1AFFFFFF
     const val BORDER = 0x17FFFFFF
@@ -31,7 +30,15 @@ object C {
 fun Context.dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
 
 fun gradBg(radius: Float): GradientDrawable {
-    val d = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(C.ACCENT, C.ACCENT2))
+    val d = GradientDrawable()
+    d.setColor(C.ACCENT)
+    d.cornerRadius = radius
+    return d
+}
+
+fun gradBg2(radius: Float): GradientDrawable {
+    val d = GradientDrawable()
+    d.setColor(C.ACCENT2)
     d.cornerRadius = radius
     return d
 }
@@ -95,13 +102,13 @@ class DiscView(ctx: Context) : View(ctx) {
         style = Paint.Style.STROKE; strokeWidth = ringW; color = 0x1FFFFFFF
     }
     private val progPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE; strokeWidth = ringW
+        style = Paint.Style.STROKE; strokeWidth = ringW; color = C.ACCENT2
     }
     private val innerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF0D1322.toInt() }
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE; strokeWidth = 1f * density; color = 0x16FFFFFF
     }
-    private var shader: SweepGradient? = null
+    private var shader: Unit? = null
     private val rect = RectF()
     private val spinAnim = ValueAnimator.ofFloat(0f, 360f).apply {
         duration = 16000
@@ -119,9 +126,6 @@ class DiscView(ctx: Context) : View(ctx) {
     }
 
     override fun onSizeChanged(w: Int, h: Int, ow: Int, oh: Int) {
-        val cx = w / 2f
-        shader = SweepGradient(cx, h / 2f, intArrayOf(C.ACCENT, C.ACCENT2, C.ACCENT),
-            floatArrayOf(0f, 0.5f, 1f))
         val inset = ringW / 2f + 4f * density
         rect.set(inset, inset, w - inset, h - inset)
     }
@@ -133,7 +137,6 @@ class DiscView(ctx: Context) : View(ctx) {
         if (progress > 0.002f) {
             c.save()
             c.rotate(-90f, cx, cy)
-            progPaint.shader = shader
             c.drawArc(rect, 0f, 360f * progress, false, progPaint)
             c.restore()
         }
